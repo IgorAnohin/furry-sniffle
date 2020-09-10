@@ -8,7 +8,7 @@ import edit from '../img/edit.svg';
 import './place.css';
 
 
-const Basket = ({ match: { params: { areaId, itemId }}, foodAreas, order }) => {
+const Basket = ({ match: { params: { areaId, itemId }}, history, foodAreas, order }) => {
   const [ faster, setFaster ] = useState(true);
   const [ time, setTime ] = useState('');
   const [ selfService, setSelfService ] = useState(false);
@@ -147,8 +147,22 @@ const Basket = ({ match: { params: { areaId, itemId }}, foodAreas, order }) => {
         </div>
       </div>
       <footer className="Place__footer">
-        <Link to={`/order/${area.id}/${item.id}`} className="Place__order">
-          Оплатить {price}
+        <Link 
+          to={
+            products.some(({ count }) => count > 0)
+            ? `/order/${area.id}/${item.id}`
+            : `/place/${area.id}/${item.id}`
+          }
+          className={ 
+            products.some(({ count }) => count > 0)
+            ? 'Place__order' 
+            : 'Place__order--disabled'
+          }
+        >
+          {
+            products.some(({ count }) => count > 0) ?
+            `Оплатить ${price}` : 'Добавьте в корзину хотя бы один товар'
+          }
         </Link>
       </footer>
     </div>
